@@ -7,8 +7,8 @@ import (
     "net/http"
     "database/sql"
     _ "github.com/mattn/go-sqlite3"
-    users "home/arvyd/repos/goserver/users"
-    reddit "home/arvyd/repos/goserver/reddit"
+    users "goserver/users"
+    reddit "goserver/reddit"
 )
 
 
