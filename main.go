@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "log"
     "strconv"
     "html/template"
@@ -161,6 +162,7 @@ func createDatabase() (error) {
 
 
 func main() {
+    fmt.Println("Server started\nListening at port: 8080")
     err := createDatabase()
     if err != nil {
         log.Fatal(err)
