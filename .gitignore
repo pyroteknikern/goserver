@@ -4,3 +4,7 @@ db.sqlite3
 main
 /goserver
 goserver
+/go.mod
+go.mod
+/go.sum
+go.sum
