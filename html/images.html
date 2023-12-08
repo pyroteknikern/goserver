@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+    </head>
+    <body>
+<form id="image"
+    hx-post="/meme-send"
+    hx-target="#image"
+    hx-swap="outerHTML"
+    >
+    <img  src="{{ .Image }}" width="500" height="600">
+    <div>
+        <input id="counter" name="counter" value="{{ .Counter }}">
+    </div> 
+    <button type="submit">
+        next
+    </button>
+</form>
+    </body>
+</html>

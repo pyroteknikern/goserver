@@ -1,0 +1,13 @@
+<form id="image"
+    hx-post="/meme-send"
+    hx-target="#image"
+    hx-swap="outerHTML"
+    >
+    <img  src="{{ .Image }}" width="500" height="600">
+    <div>
+        <input id="counter" name="counter" value="{{ .Counter }}">
+    </div> 
+    <button type="submit">
+        next
+    </button>
+</form>
