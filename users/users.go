@@ -50,10 +50,13 @@ func FindUser(username string) (bool, error) {
 }
 
 func ComparePassword(user User) (bool, error) {
-    db, _ := sql.Open("sqlite3", "./db.sqlite3")
+    db, err := sql.Open("sqlite3", "./db.sqlite3")
+    if err != nil {
+        return false, err
+    }
 
     var qPassword string
-    err := db.QueryRow("SELECT password FROM users WHERE username=?", user.Username).Scan(&qPassword)
+    err = db.QueryRow("SELECT password FROM users WHERE username=?", user.Username).Scan(&qPassword)
     if err != nil {
         return false, err
     }
