@@ -104,6 +104,7 @@ func signUp(w http.ResponseWriter, r *http.Request) {
     newUser := getUser(r)
     err := users.CreateUser(newUser)
     if err != nil {
+        fmt.Println(err)
         http.Redirect(w, r, "/auth/sign-up-page", http.StatusFound)
         return
     }

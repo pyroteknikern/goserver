@@ -16,10 +16,7 @@ func CreateUser(newUser User) (error) {
         return err
     }
 
-    truth, err := FindUser(newUser.Username)
-    if err != nil {
-        return err
-    }
+    truth, _ := FindUser(newUser.Username)
 
     if truth {
         return errors.New("User already exists")
