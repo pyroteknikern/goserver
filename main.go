@@ -10,21 +10,53 @@ import (
 )
 
 func startHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println(r.URL.Path)
     switch r.URL.Path {
     case "/":
-        renderPage(w, "html/home.html")
+        homePage(w, r)
     default:
         pageNotFound(w)
     }
 }
-        
 
-func renderPage(w http.ResponseWriter, documentPath string, ) (error) {
-    t, err := template.ParseFiles(documentPath)
+func currentUser(r *http.Request) Data {
+    c, err := r.Cookie("token")
+    var d Data
     if err != nil {
+        d = Data{
+            Auth: false,
+            Username: "",
+        }
+    } else {
+        username := tokenUsername(c.Value)
+        d = Data{
+            Auth: true,
+            Username: username,
+        }
+    }
+    return d
+}
+
+func homePage(w http.ResponseWriter, r *http.Request) {
+    d := currentUser(r) 
+    d.Title = "Home"
+    renderPage(w, "html/home.html", d)
+}
+
+type Data struct {
+    Auth bool
+    Username string
+    Title string
+}
+
+func renderPage(w http.ResponseWriter, htmlPath string, d interface{}) (error) {
+    tmpl, err := template.ParseFiles(htmlPath, "html/top.html")
+    if err != nil {
+        fmt.Println(err)
         return err
     }
-    t.Execute(w, nil)
+    tmpl.ExecuteTemplate(w, "header", d)
+    tmpl.Execute(w, d)
     return nil
 }
 
@@ -58,7 +90,7 @@ func main() {
     fmt.Printf("Server started\nListening at port: %v\n", port)
     http.HandleFunc("/", startHandler)
     http.HandleFunc("/auth/", loginHandler)
-    http.HandleFunc("/memes/", memeHandler)
+    http.HandleFunc("/auth/memes/", memeHandler)
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
 

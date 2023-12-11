@@ -16,9 +16,13 @@ func CreateUser(newUser User) (error) {
         return err
     }
 
-    err = FindUser(newUser)
-    if err == nil {
-        return errors.New("user exists")
+    truth, err := FindUser(newUser.Username)
+    if err != nil {
+        return err
+    }
+
+    if truth {
+        return errors.New("User already exists")
     }
 
     statement, err := db.Prepare("INSERT INTO users (username, password) VALUES (?, ?)")
@@ -30,18 +34,36 @@ func CreateUser(newUser User) (error) {
     return nil
 }
 
-func FindUser(user User) (error) {
+func FindUser(username string) (bool, error) {
     db, err := sql.Open("sqlite3", "./db.sqlite3")
     if err != nil {
-        return err
+        return false, err
     }
 
-    var username string
-    err = db.QueryRow("SELECT username FROM users WHERE username=?", user.Username).Scan(&username)
+    var qUsername string
+    err = db.QueryRow("SELECT username FROM users WHERE username=?", username).Scan(&qUsername)
     if err != nil {
-        return err
+        return false, err
+    }
+    
+    if username == qUsername {
+        return true, nil
+    }
+    return false, nil
+}
+
+func ComparePassword(user User) (bool, error) {
+    db, _ := sql.Open("sqlite3", "./db.sqlite3")
+
+    var qPassword string
+    err := db.QueryRow("SELECT password FROM users WHERE username=?", user.Username).Scan(&qPassword)
+    if err != nil {
+        return false, err
     }
 
-    return nil
+    if user.Password == qPassword {
+        return true, nil
+    }
+    return false, nil
 }
 

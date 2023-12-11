@@ -1,0 +1,27 @@
+{{ define "header" }}
+<head>
+    <title>{{ .Title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+</head>
+<nav>
+    {{ if .Auth }}
+    <a href="/auth/home">Home</a>  
+    {{ else }}
+    <a href="/">Home</a>  
+    {{ end }}
+    
+    {{ if .Auth }}
+    <a href="/auth/memes/meme-page">Memes</a>  
+    <a href="/auth/log-out">Log out</a>
+    {{ else }}
+    <a href="/auth/sign-up-page">Sign Up</a>  
+    <a href="/auth/sign-in-page">Sign In</a>
+    {{ end }}
+    {{ if .Auth }}
+    <p>{{ .Username }}</p>
+    {{ end }}
+</nav>
+{{ end }}

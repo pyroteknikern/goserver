@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "strconv"
     "html/template"
     "net/http"
@@ -9,7 +10,11 @@ import (
 )
 
 func memeHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.URL.Path[6:] {
+    fmt.Println(r.URL.Path)
+
+    if !loginRequired(w, r) { http.Redirect(w, r, "/kuk", http.StatusFound); return }
+    
+    switch r.URL.Path[11:] {
     case "/meme-send":
         memeSend(w, r)
     case "/meme-page":
@@ -17,13 +22,6 @@ func memeHandler(w http.ResponseWriter, r *http.Request) {
     default:
         pageNotFound(w)
     }
-}
-
-
-var Images []string 
-type Img struct {
-    Image string
-    Counter int
 }
 
 func memeSend(w http.ResponseWriter, r *http.Request) {
@@ -49,8 +47,19 @@ func memeSend(w http.ResponseWriter, r *http.Request) {
         Image: Images[counter],
         Counter: counter,
     }
+
     tmpl, _ := template.ParseFiles("html/template.html")
     tmpl.Execute(w, img)
+}
+
+var Images []string 
+
+type Img struct {
+    Username string
+    Auth bool
+    Title string
+    Image string
+    Counter int
 }
 
 func memePage(w http.ResponseWriter, r *http.Request) {
@@ -61,10 +70,14 @@ func memePage(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         return
     }
+    c, _ := r.Cookie("token")
+    username := tokenUsername(c.Value)
     img := Img{
+        Username: username,
+        Auth: true,
+        Title: "Memes",
         Image: Images[0], 
         Counter: 0,
     }
-    t, _ := template.New("images.html").ParseFiles("html/images.html")
-    t.Execute(w, img)
+    renderPage(w, "html/images.html", img)
 }
