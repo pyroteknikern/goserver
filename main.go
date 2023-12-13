@@ -9,8 +9,19 @@ import (
     _ "github.com/mattn/go-sqlite3"
 )
 
+func ReadUserIP(r *http.Request) string {
+    IPAddress := r.Header.Get("X-Real-Ip")
+    if IPAddress == "" {
+        IPAddress = r.Header.Get("X-Forwarded-For")
+    }
+    if IPAddress == "" {
+        IPAddress = r.RemoteAddr
+    }
+    return IPAddress
+}
+
 func startHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path)
+    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
     switch r.URL.Path {
     case "/":
         homePage(w, r)

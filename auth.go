@@ -22,7 +22,7 @@ func loginRequired(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path)
+    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
     switch r.URL.Path[5:] {
     case "/home":
         homePage(w, r)

@@ -6,6 +6,7 @@ import (
     "context"
     "errors"
 )
+
 var ctx = context.Background()
 
 func GetPosts() ([]string, error) {
@@ -14,7 +15,7 @@ func GetPosts() ([]string, error) {
 		ListOptions: reddit.ListOptions{
 			Limit: 100,
 		},
-		Time: "week",
+		Time: "day",
 	})
 	if err != nil {
 		return nil, errors.New("Could not get posts")

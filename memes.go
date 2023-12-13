@@ -1,6 +1,7 @@
 package main
 
 import (
+    "time"
     "fmt"
     "strconv"
     "html/template"
@@ -10,7 +11,7 @@ import (
 )
 
 func memeHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path)
+    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
 
     if !loginRequired(w, r) { http.Redirect(w, r, "/kuk", http.StatusFound); return }
     
@@ -24,20 +25,33 @@ func memeHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+
+var dateCompare int = time.Now().Day()
+
 func memeSend(w http.ResponseWriter, r *http.Request) {
+
     var err error
+    if dateCompare != time.Now().Day() {
+        Images, err = reddit.GetPosts()
+        dateCompare = time.Now().Day()
+        fmt.Println(time.Now(), dateCompare)
+    }
+    if err != nil {
+        return
+    }
+
     if len(Images) == 0 {
         Images, err = reddit.GetPosts()
     }
     if err != nil {
         return
     }
+
     counterString := r.FormValue("counter")
     counter, err := strconv.Atoi(counterString)
     if err != nil {
         counter = 0
     }
-
     counter += 1
     if counter >= len(Images) {
         counter = 0
@@ -63,6 +77,7 @@ type Img struct {
 }
 
 func memePage(w http.ResponseWriter, r *http.Request) {
+
     var err error
     if len(Images) == 0 {
         Images, err = reddit.GetPosts()
@@ -70,6 +85,7 @@ func memePage(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         return
     }
+
     c, _ := r.Cookie("token")
     username := tokenUsername(c.Value)
     img := Img{
@@ -79,5 +95,6 @@ func memePage(w http.ResponseWriter, r *http.Request) {
         Image: Images[0], 
         Counter: 0,
     }
+
     renderPage(w, "html/images.html", img)
 }
