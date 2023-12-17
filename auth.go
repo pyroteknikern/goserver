@@ -62,6 +62,7 @@ func signIn(w http.ResponseWriter, r *http.Request) {
     truth, err := users.FindUser(user.Username)
     if err != nil {
         http.Redirect(w, r, "/auth/sign-in-page", http.StatusFound) 
+        fmt.Println(err)
         return
     }
     if !truth {
@@ -71,6 +72,7 @@ func signIn(w http.ResponseWriter, r *http.Request) {
     comp, err := users.ComparePassword(user)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
+        fmt.Println(err)
         return
     }
     if !comp {
@@ -82,6 +84,7 @@ func signIn(w http.ResponseWriter, r *http.Request) {
 
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
+        fmt.Println(err)
         return
     }
 

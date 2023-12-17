@@ -38,6 +38,7 @@ func currentUser(r *http.Request) Data {
             Auth: false,
             Username: "",
         }
+        fmt.Println(err)
     } else {
         username := tokenUsername(c.Value)
         d = Data{

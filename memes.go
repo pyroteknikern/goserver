@@ -37,6 +37,7 @@ func memeSend(w http.ResponseWriter, r *http.Request) {
         fmt.Println(time.Now(), dateCompare)
     }
     if err != nil {
+        fmt.Println(err)
         return
     }
 
@@ -44,12 +45,14 @@ func memeSend(w http.ResponseWriter, r *http.Request) {
         Images, err = reddit.GetPosts()
     }
     if err != nil {
+        fmt.Println(err)
         return
     }
 
     counterString := r.FormValue("counter")
     counter, err := strconv.Atoi(counterString)
     if err != nil {
+        fmt.Println(err)
         counter = 0
     }
     counter += 1
@@ -83,6 +86,7 @@ func memePage(w http.ResponseWriter, r *http.Request) {
         Images, err = reddit.GetPosts()
     }
     if err != nil {
+        fmt.Println(err)
         return
     }
 
