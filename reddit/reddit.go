@@ -16,12 +16,14 @@ func GetPosts() ([]string, error) {
     
     godotenv.Load()
 
-    //secret := os.Getenv("SECRET")
+    secret := os.Getenv("SECRET")
     id := os.Getenv("ID")
+    username := os.Getenv("USERNAME")
+    password := os.Getenv("PASSWORD")
 
     fmt.Println(id)
-    //credentials := reddit.Credentials{ID: id, Secret: secret}
-	client, err := reddit.NewReadonlyClient()
+    credentials := reddit.Credentials{ID: id, Secret: secret, Username: username, Password: password}
+	client, err := reddit.NewClient(credentials)
 	if err != nil {
 		return nil, err
 	}
