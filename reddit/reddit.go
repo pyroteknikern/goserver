@@ -4,21 +4,35 @@ import (
     "strings"
     "github.com/vartanbeno/go-reddit/v2/reddit"
     "context"
-    "errors"
+    "os"
+    "fmt"
+    "github.com/joho/godotenv"
 )
 
 var ctx = context.Background()
 
 func GetPosts() ([]string, error) {
     var allowed []string = []string{".jpg", ".jpeg", ".png", ".gif"}
-	posts, _, err := reddit.DefaultClient().Subreddit.TopPosts(ctx, "lotrmemes", &reddit.ListPostOptions{
+    
+    godotenv.Load()
+
+    //secret := os.Getenv("SECRET")
+    id := os.Getenv("ID")
+
+    fmt.Println(id)
+    //credentials := reddit.Credentials{ID: id, Secret: secret}
+	client, err := reddit.NewReadonlyClient()
+	if err != nil {
+		return nil, err
+	}
+    posts,_ , err := client.Subreddit.TopPosts(ctx, "lotrmemes", &reddit.ListPostOptions{
 		ListOptions: reddit.ListOptions{
 			Limit: 100,
 		},
 		Time: "day",
 	})
 	if err != nil {
-		return nil, errors.New("Could not get posts")
+		return nil, err
 	}
     var filteredPosts []string
 	for _, post := range posts {

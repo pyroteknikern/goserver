@@ -8,3 +8,7 @@ goserver
 go.mod
 /go.sum
 go.sum
+/.env
+.env
+reddit/.env
+/reddit/.env
