@@ -7,7 +7,7 @@ import (
     _ "github.com/mattn/go-sqlite3"
     users "goserver/users"
 )
-func loginRequired(w http.ResponseWriter, r *http.Request) bool {
+func SignedIn(r *http.Request) bool {
     c, err := r.Cookie("token")
     if err != nil {
         if err == http.ErrNoCookie {
@@ -22,7 +22,7 @@ func loginRequired(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
+    fmt.Println(ReadUserIP(r), " ", r.URL.Path)
     switch r.URL.Path[5:] {
     case "/home":
         homePage(w, r)

@@ -5,7 +5,6 @@ import (
     "github.com/vartanbeno/go-reddit/v2/reddit"
     "context"
     "os"
-    "fmt"
     "github.com/joho/godotenv"
 )
 
@@ -21,7 +20,6 @@ func GetPosts() ([]string, error) {
     username := os.Getenv("USERNAME")
     password := os.Getenv("PASSWORD")
 
-    fmt.Println(id)
     credentials := reddit.Credentials{ID: id, Secret: secret, Username: username, Password: password}
 	client, err := reddit.NewClient(credentials)
 	if err != nil {

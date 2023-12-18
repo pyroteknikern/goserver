@@ -3,7 +3,18 @@ package users
 import (
     "database/sql"
     "errors"
+    "golang.org/x/crypto/bcrypt"
 )
+
+func hashPassword(password string) (string, error) {
+    passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+    return string(passwordHash), err
+}
+
+func checkPasswordHash(password string, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
+}
 
 type User struct {
     Username string
@@ -27,7 +38,12 @@ func CreateUser(newUser User) (error) {
         return err
     }
 
-    statement.Exec(newUser.Username, newUser.Password)
+    hash, err := hashPassword(newUser.Password)
+    if err != nil {
+        return err
+    }
+
+    statement.Exec(newUser.Username, hash)
     return nil
 }
 
@@ -55,13 +71,13 @@ func ComparePassword(user User) (bool, error) {
         return false, err
     }
 
-    var qPassword string
-    err = db.QueryRow("SELECT password FROM users WHERE username=?", user.Username).Scan(&qPassword)
+    var queryPasswordHash string
+    err = db.QueryRow("SELECT password FROM users WHERE username=?", user.Username).Scan(&queryPasswordHash)
     if err != nil {
         return false, err
     }
 
-    if user.Password == qPassword {
+    if checkPasswordHash(user.Password, queryPasswordHash) {
         return true, nil
     }
     return false, nil

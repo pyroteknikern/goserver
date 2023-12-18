@@ -11,9 +11,9 @@ import (
 )
 
 func memeHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
+    fmt.Println(ReadUserIP(r), " ", r.URL.Path)
 
-    if !loginRequired(w, r) { http.Redirect(w, r, "/kuk", http.StatusFound); return }
+    if !SignedIn(r) { http.Redirect(w, r, "/", http.StatusFound); return }
     
     switch r.URL.Path[11:] {
     case "/meme-send":

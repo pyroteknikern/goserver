@@ -21,7 +21,7 @@ func ReadUserIP(r *http.Request) string {
 }
 
 func startHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println(r.URL.Path, "\n", ReadUserIP(r))
+    fmt.Println(ReadUserIP(r), " ", r.URL.Path)
     switch r.URL.Path {
     case "/":
         homePage(w, r)
